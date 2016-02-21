@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="10dp"
+    tools:context="labouardy.com.dockerregistry.Register">
+
+
+    <EditText
+        android:id="@+id/hostnameET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Hostname"/>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/hostnameET"
+        android:id="@+id/portET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Port"/>
+
+    <Spinner
+        android:layout_below="@+id/portET"
+        android:id="@+id/versionSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:entries="@array/versions"
+        android:gravity="left"/>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/versionSpinner"
+        android:id="@+id/usernameET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Username"/>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/usernameET"
+        android:id="@+id/passwordET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Password"/>
+
+    <Button
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/passwordET"
+        android:id="@+id/button_bt_flat"
+        android:layout_width="fill_parent"
+        android:textAllCaps="false"
+        android:layout_height="35dp"
+        android:layout_weight="0.4"
+        android:text="Create"
+        android:textColor="@color/white"
+        android:background="@color/dashboard"/>
+
+</RelativeLayout>

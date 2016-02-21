@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Docker Registry</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_register">New Registry</string>
+
+    <string-array name="versions">
+        <item>V1</item>
+        <item>V2</item>
+    </string-array>
+</resources>
