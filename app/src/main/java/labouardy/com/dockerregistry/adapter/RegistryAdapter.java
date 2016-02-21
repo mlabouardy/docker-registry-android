@@ -11,6 +11,7 @@ import java.util.List;
 
 import labouardy.com.dockerregistry.R;
 import labouardy.com.dockerregistry.model.Registry;
+import labouardy.com.dockerregistry.util.Timesince;
 
 /**
  * Created by mlabouardy on 20/02/16.
@@ -18,6 +19,7 @@ import labouardy.com.dockerregistry.model.Registry;
 public class RegistryAdapter extends BaseAdapter {
     private Activity activity;
     private List<Registry> registries;
+    private Timesince timesince=Timesince.getInstance();
 
     public RegistryAdapter(Activity activity, List<Registry> registries){
         this.activity=activity;
@@ -48,9 +50,11 @@ public class RegistryAdapter extends BaseAdapter {
 
         TextView nameTV=(TextView)view.findViewById(R.id.registryTV);
         TextView versionTV=(TextView)view.findViewById(R.id.versionTV);
+        TextView timeTV=(TextView)view.findViewById(R.id.timeTV);
 
         nameTV.setText(registry.getHostname()+":"+registry.getPort());
         versionTV.setText(registry.getVersion());
+        timeTV.setText(timesince.calculateSince(registry.getCreationDate()));
 
         return view;
     }

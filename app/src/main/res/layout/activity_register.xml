@@ -7,8 +7,17 @@
     android:padding="10dp"
     tools:context="labouardy.com.dockerregistry.Register">
 
+    <TextView
+        android:id="@+id/basicLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Basic Settings"
+        android:textColor="@color/dashboard"
+        android:textStyle="bold"/>
 
     <EditText
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/basicLabel"
         android:id="@+id/hostnameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +30,7 @@
         android:id="@+id/portET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="number"
         android:hint="Port"/>
 
     <Spinner
@@ -33,9 +42,19 @@
         android:entries="@array/versions"
         android:gravity="left"/>
 
-    <EditText
+    <TextView
         android:layout_marginTop="10dp"
         android:layout_below="@+id/versionSpinner"
+        android:id="@+id/customLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Advanced Settings"
+        android:textColor="@color/dashboard"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/customLabel"
         android:id="@+id/usernameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,13 +73,13 @@
     <Button
         android:layout_marginTop="15dp"
         android:layout_below="@+id/passwordET"
-        android:id="@+id/button_bt_flat"
+        android:id="@+id/createBtn"
         android:layout_width="fill_parent"
         android:textAllCaps="false"
         android:layout_height="35dp"
         android:layout_weight="0.4"
         android:text="Create"
         android:textColor="@color/white"
-        android:background="@color/dashboard"/>
+        android:background="@color/first"/>
 
 </RelativeLayout>

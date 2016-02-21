@@ -1,16 +1,33 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp"
+<FrameLayout android:layout_below="@+id/mediaplayer"
+    android:id="@+id/radios"
     android:background="#FFF"
-    tools:context=".Home">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <ListView
+
+        android:padding="10dp"
         android:background="#FFF"
         android:id="@+id/registries"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="#FFF"
-        android:dividerHeight="10dp"></ListView>
+        android:dividerHeight="10dp"
+        >
+    </ListView>
 
-</RelativeLayout>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/add"
+        fab:fab_colorNormal="@color/dashboard"
+        fab:fab_colorPressed="#F44336"
+        fab:fab_colorRipple="#F44336" />
+
+</FrameLayout>

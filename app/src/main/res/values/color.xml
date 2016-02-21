@@ -2,4 +2,7 @@
 <resources>
     <color name="dashboard">#2F4050</color>
     <color name="white">#FFF</color>
+    <color name="first">#19AA8D</color>
+    <color name="primary">#293846</color>
+    <color name="secondary">#2F4050</color>
 </resources>

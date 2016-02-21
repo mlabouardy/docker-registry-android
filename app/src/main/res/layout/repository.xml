@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:minHeight="80dp"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/dashboard">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/image"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="4dp"/>
+
+    <TextView
+        android:id="@+id/repositoryTV"
+        android:layout_marginRight="10dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image:tag"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

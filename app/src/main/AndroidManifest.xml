@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="labouardy.com.dockerregistry" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon,android:theme" >
         <activity
             android:name=".Home"
             android:label="@string/app_name" >
@@ -18,7 +22,13 @@
         </activity>
         <activity
             android:name=".Register"
-            android:label="@string/title_activity_register" >
+            android:label="@string/title_activity_register" />
+        <activity
+            android:name=".Repositories"
+            android:label="@string/title_activity_content" />
+        <activity
+            android:name=".Tags"
+            android:label="@string/title_activity_tags" >
         </activity>
     </application>
 

@@ -6,11 +6,29 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.io.IOException;
+import java.util.Date;
+
+import labouardy.com.dockerregistry.dialog.Dialog;
+import labouardy.com.dockerregistry.dialog.ErrorDialog;
+import labouardy.com.dockerregistry.dialog.SuccessDialog;
+import labouardy.com.dockerregistry.handler.Storage;
+import labouardy.com.dockerregistry.model.Account;
+import labouardy.com.dockerregistry.model.Registry;
 
 
 public class Register extends ActionBarActivity {
+    private EditText hostnameET, portET, usernameET, passwordET;
+    private Spinner versionSpinner;
+    private Button createBtn;
+    private Account account=Account.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +38,47 @@ public class Register extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         changeColor();
+
+        init();
+    }
+
+    public void init(){
+        hostnameET=(EditText)findViewById(R.id.hostnameET);
+        portET=(EditText)findViewById(R.id.portET);
+        usernameET=(EditText)findViewById(R.id.usernameET);
+        passwordET=(EditText)findViewById(R.id.passwordET);
+        versionSpinner=(Spinner)findViewById(R.id.versionSpinner);
+        createBtn=(Button)findViewById(R.id.createBtn);
+
+        createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String hostname=hostnameET.getText().toString().trim();
+                Integer port=new Integer(portET.getText().toString());
+                String version=versionSpinner.getSelectedItem().toString();
+
+                Registry registry=new Registry();
+                registry.setHostname(hostname);
+                registry.setPort(port);
+                registry.setVersion(version);
+                registry.setCreationDate(new Date());
+
+                if(account.alreadyExist(registry)){
+                    Dialog dialog=new ErrorDialog(Register.this);
+                    dialog.show("Registry already exists !");
+                }else{
+                    account.add(registry);
+                    Storage storage= Storage.getInstance();
+                    try {
+                        storage.writeObject(Register.this, "DOCKER_REGISTRY", account);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    finish();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -49,6 +108,10 @@ public class Register extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

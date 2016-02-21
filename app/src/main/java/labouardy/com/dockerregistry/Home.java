@@ -13,17 +13,26 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.melnykov.fab.FloatingActionButton;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import labouardy.com.dockerregistry.adapter.RegistryAdapter;
+import labouardy.com.dockerregistry.handler.Storage;
+import labouardy.com.dockerregistry.model.Account;
 import labouardy.com.dockerregistry.model.Registry;
+import labouardy.com.dockerregistry.model.RegistrySingleton;
 
 
 public class Home extends ActionBarActivity {
     private ListView lv;
-    private List<Registry> registries;
     private RegistryAdapter adapter;
+    private Account account=Account.getInstance();
+    private Timer timer=new Timer();
+    private Storage storage= Storage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +43,68 @@ public class Home extends ActionBarActivity {
         init();
     }
 
+
     public void init(){
+        Account l= null;
+        try {
+            l = (Account)storage.readObject(this, "DOCKER_REGISTRY");
+            if(l!=null)
+                account=l;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         lv=(ListView)findViewById(R.id.registries);
-        registries=new ArrayList();
-
-        Registry r=new Registry();
-        r.setHostname("51.254.132.239");
-        r.setPort("5000");
-        r.setVersion("V1");
-
-        registries.add(r);
-
-        adapter=new RegistryAdapter(this, registries);
+        adapter=new RegistryAdapter(this, account.getRegistries());
         lv.setAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.create);
+        fab.attachToListView(lv);
+        fab.setColorNormal(getResources().getColor(R.color.first));
+        fab.setColorPressed(getResources().getColor(R.color.primary));
+        fab.setColorRipple(getResources().getColor(R.color.secondary));
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home.this, Register.class);
+                startActivity(intent);
+            }
+        });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent=new Intent(Home.this, Register.class);
+                Intent intent = new Intent(Home.this, Repositories.class);
+                Registry r = account.getRegistries().get(i);
+                Registry rs = RegistrySingleton.getInstance();
+                rs.setHostname(r.getHostname());
+                rs.setPort(r.getPort());
+                rs.setVersion(r.getVersion());
+                rs.setAuth(r.getAuth());
                 startActivity(intent);
             }
         });
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        },1000,10000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     public void changeColor(){
