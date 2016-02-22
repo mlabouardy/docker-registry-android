@@ -16,11 +16,15 @@ import android.widget.ListView;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import labouardy.com.dockerregistry.adapter.RegistryAdapter;
+import labouardy.com.dockerregistry.dialog.Dialog;
+import labouardy.com.dockerregistry.dialog.SuccessDialog;
 import labouardy.com.dockerregistry.handler.Storage;
 import labouardy.com.dockerregistry.model.Account;
 import labouardy.com.dockerregistry.model.Registry;
@@ -43,18 +47,30 @@ public class Home extends ActionBarActivity {
         init();
     }
 
+    public void removeNotify(){
+        adapter.notifyDataSetChanged();
+        Dialog dialog=new SuccessDialog(this);
+        dialog.show("Registry has been removed");
+        try {
+            storage.writeObject(this, "DOCKER_REGISTRY",account);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void init(){
         Account l= null;
         try {
             l = (Account)storage.readObject(this, "DOCKER_REGISTRY");
-            if(l!=null)
-                account=l;
+            if(l!=null){
+                account.save(l.getRegistries());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         lv=(ListView)findViewById(R.id.registries);
         adapter=new RegistryAdapter(this, account.getRegistries());
         lv.setAdapter(adapter);
