@@ -14,9 +14,9 @@ Manage docker registry directly in your android phone
 
 # Download
 
-Version | Link
---------------
-1.0 | <a href="build/docker-registry.apk">Download</a>
+Version | Download
+------------ | -------------
+1.0 | Soon on google play
 
 # Developer
 
