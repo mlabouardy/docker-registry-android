@@ -21,3 +21,8 @@ Version | Link
 # Developer
 
 Mohamed Labouardy <mohamed@labouardy.com>
+
+# Stack
+
+- Android SDK
+- OKHttp
