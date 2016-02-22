@@ -15,7 +15,7 @@ public class APIv2 extends APIHandlerImp {
 
     @Override
     public Call getRepositories(Registry registry, Callback callback) {
-        String url=registry.getHostname()+":"+registry.getPort();
+        String url="http://"+registry.getHostname()+":"+registry.getPort()+"/v2/_catalog";
         Request request=new Request.Builder().url(url).build();
         Call call = client.newCall(request);
         call.enqueue(callback);
@@ -24,7 +24,11 @@ public class APIv2 extends APIHandlerImp {
 
     @Override
     public Call getImages(Registry registry, String repository, Callback callback){
-        return null;
+        String url="http://"+registry.getHostname()+":"+registry.getPort()+"/v2/"+repository+"/tags/list";
+        Request request=new Request.Builder().url(url).build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+        return call;
     }
 
 }

@@ -30,6 +30,7 @@ import labouardy.com.dockerregistry.dialog.Dialog;
 import labouardy.com.dockerregistry.dialog.ErrorDialog;
 import labouardy.com.dockerregistry.handler.APIHandler;
 import labouardy.com.dockerregistry.handler.APIv1;
+import labouardy.com.dockerregistry.handler.APIv2;
 import labouardy.com.dockerregistry.model.Registry;
 import labouardy.com.dockerregistry.model.RegistrySingleton;
 import labouardy.com.dockerregistry.model.Repository;
@@ -69,46 +70,88 @@ public class Tags extends ActionBarActivity {
 
         final Registry r= RegistrySingleton.getInstance();
 
-        api=new APIv1();
+        if(r.getVersion().compareTo("V1")==0){
+            api=new APIv1();
 
-        api.getImages(r, repository, new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        Dialog dialog=new ErrorDialog(Tags.this);
-                        dialog.show("Server is not responding !");
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                String data=response.body().string();
-                try {
-                    JSONObject tmp=new JSONObject(data);
-                    Iterator<String> keys=tmp.keys();
-                    while(keys.hasNext()){
-                        String key=keys.next();
-                        Tag tag=new Tag();
-                        tag.setTag(key);
-                        tags.add(tag);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            api.getImages(r, repository, new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Dialog dialog=new ErrorDialog(Tags.this);
+                            dialog.show("Server is not responding !");
+                        }
+                    });
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        progressDialog.dismiss();
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    String data=response.body().string();
+                    try {
+                        JSONObject tmp=new JSONObject(data);
+                        Iterator<String> keys=tmp.keys();
+                        while(keys.hasNext()){
+                            String key=keys.next();
+                            Tag tag=new Tag();
+                            tag.setTag(key);
+                            tags.add(tag);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }else{
+            api=new APIv2();
+            api.getImages(r, repository, new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Dialog dialog=new ErrorDialog(Tags.this);
+                            dialog.show("Server is not responding !");
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    String data=response.body().string();
+                    try {
+                        JSONObject tmp=new JSONObject(data);
+                        JSONArray d=tmp.getJSONArray("tags");
+                        for(int i=0;i<d.length();i++){
+                            Tag tag=new Tag();
+                            tag.setTag(d.getString(i));
+                            tags.add(tag);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+
     }
 
     public void changeColor(){

@@ -31,6 +31,7 @@ import labouardy.com.dockerregistry.dialog.Dialog;
 import labouardy.com.dockerregistry.dialog.ErrorDialog;
 import labouardy.com.dockerregistry.handler.APIHandler;
 import labouardy.com.dockerregistry.handler.APIv1;
+import labouardy.com.dockerregistry.handler.APIv2;
 import labouardy.com.dockerregistry.model.Registry;
 import labouardy.com.dockerregistry.model.RegistrySingleton;
 import labouardy.com.dockerregistry.model.Repository;
@@ -66,43 +67,85 @@ public class Repositories extends ActionBarActivity {
 
         final Registry r= RegistrySingleton.getInstance();
 
-        api=new APIv1();
-        api.getRepositories(r, new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        Dialog dialog=new ErrorDialog(Repositories.this);
-                        dialog.show("Server is not responding !");
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(final Response response) throws IOException {
-                String data = response.body().string();
-                try {
-                    JSONObject o = new JSONObject(data);
-                    JSONArray tmp = o.getJSONArray("results");
-                    for (int i = 0; i < tmp.length(); i++) {
-                        Repository repository = new Repository();
-                        repository.setName(tmp.getJSONObject(i).getString("name"));
-                        repositories.add(repository);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(r.getVersion().compareTo("V1")==0){
+            api=new APIv1();
+            api.getRepositories(r, new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Dialog dialog=new ErrorDialog(Repositories.this);
+                            dialog.show("Server is not responding !");
+                        }
+                    });
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        progressDialog.dismiss();
+
+                @Override
+                public void onResponse(final Response response) throws IOException {
+                    String data = response.body().string();
+                    try {
+                        JSONObject o = new JSONObject(data);
+                        JSONArray tmp = o.getJSONArray("results");
+                        for (int i = 0; i < tmp.length(); i++) {
+                            Repository repository = new Repository();
+                            repository.setName(tmp.getJSONObject(i).getString("name"));
+                            repositories.add(repository);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }else{
+            api=new APIv2();
+            api.getRepositories(r,new Callback(){
+
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Dialog dialog=new ErrorDialog(Repositories.this);
+                            dialog.show("Server is not responding !");
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    String data = response.body().string();
+                    try {
+                        JSONObject o = new JSONObject(data);
+                        JSONArray tmp = o.getJSONArray("repositories");
+                        for (int i = 0; i < tmp.length(); i++) {
+                            Repository repository = new Repository();
+                            repository.setName(tmp.getString(i));
+                            repositories.add(repository);
+                        }
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
